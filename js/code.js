@@ -4,11 +4,11 @@ reg.$t7 = 100;
 
 reg.updateAll();
 
-var test = "mark";
+reg.loadValues();
 
-console.log(test.charAt(0));
 
 function run() {
+    reg.loadValues();
     var time = new Date();
     instructionParse.run();
     var end = new Date();

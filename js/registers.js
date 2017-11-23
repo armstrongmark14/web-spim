@@ -58,6 +58,20 @@ var reg = {
             this.update("$t" + i);
         }
     },
+
+    // This function will update all the registers with values from the inputs
+    loadValues: function() {
+        for (var property in this) {
+            if (this.hasOwnProperty(property)
+                && document.getElementById(property + "-input") != null) {
+
+                if (document.getElementById(property + "-input").value) {
+                    console.log(property + " = " + document.getElementById(property + "-input").value);
+                    this[property] = document.getElementById(property + "-input").value;
+                }
+            }
+        }
+    },
     
     // THIS REGISTER MUST ALWAYS BE 0
     // Below has a function to make it un-writable

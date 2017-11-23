@@ -25,6 +25,29 @@ var parser = {
         for (var i = 0; i < code.length; i++) {
             parser.code.push(code[i]);
         }
+    },
+    
+    // Will find the location of a procedure in the code
+    findProcedure: function(procedure) {
+        var pLocation = null;
+        var loc;
+        procedure += ':';
+
+        for (var i = 0; i < this.lines; i++) {
+            loc = this.code[i].match(/\S+/g);
+
+            if (loc != null && loc[0] === procedure) {
+                pLocation = i;
+                break;
+            }
+        }
+
+        return pLocation;
+    },
+
+    // This will allow you to execute a jump and change current read location
+    jumpTo: function(newLocation) {
+        this.currentLine = newLocation;
     }
 };
 

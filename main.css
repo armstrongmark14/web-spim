@@ -1,7 +1,16 @@
+body {
+    font-family: "Courier New", Monospace;
+}
 #code-box {
     font-family: Monospace;
     font-size: 18px;
     font-color: #333;
     height: 500px;
-    width: 250px;
+    width: 100%;
 }
+
+.reg-input {
+    height: 23px;
+    width: 125px;
+}
+
