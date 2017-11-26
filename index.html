@@ -6,45 +6,238 @@
 
         <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
 
-        <link rel="stylesheet" href="main.css">
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+        <link rel="stylesheet" href="js/code_mirror/lib/codemirror.css">
+        <!-- <link rel="stylesheet" href="js/code_mirror/theme/base16-dark.css"> -->
+        <script src="js/code_mirror/lib/codemirror.js"></script>
+
+        <link rel="stylesheet" href="css/main.css">
         
     </head>
     <body>
-        <div id="container" class="xs-col-12">
-            <div class="col-md-4">
-                <button class="btn btn-success" onclick="run()">Run!</button>
-                <textarea id="code-box" class="form-control" sutocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" wrap="soft">
+        <div id="container" class="">
+                
+                <div id="code-wrapper" class="col-md-4">
+                    <textarea id="code-box">
 main:
     add $t1, $t3, $t2
     add $t0, $0, $t1
     addi $t9, $t2, 5
     sub $t1, $t2, $t3
+
 newMethod:
     j mark
     sll $t0, $t0, 5
     addi $t1, $t0, 9
+
 mark:
     sll $t1, $t1, 1
     add $t9, $t8, $t7
                 </textarea>
+                </div>
 
+            <div class="col-md-1">
+                <div id="control-panel" class="col-md-12 text-center">
+                    <button class="control-button btn btn-success" onclick="run()">Run  <i class="fa fa-play"></i></button>
+                    
+                </div>
             </div>
 
-            <div id="registers" class="col-md-4">
+            <div id="registers" class="col-md-7 pull-right">
 
                 <table id="register-table" class="table table-bordered table-striped">
                     <tr>
-                        <th>Initial Value<br>(Decimal)</th>
-                        <th>Reg</th>
-                        <th>Decimal</th>
+                        <th>Init Val (Dec)<br>
+                        <button class="control-button btn btn-primary" onclick="resetInitialValues()">Reset <i class="fa fa-refresh"></i></button>
+                        </th>
+                    
+                        <th class="text-center">Reg</th>
+                        <th>Decimal<br><button class="control-button btn btn-primary" onclick="setValues()">Load  <i class="fa fa-exchange"></i></button></th>
                         <th>Hex</th>
                         <th>Binary</th>
                     </tr>
-<tr><td><input id="$v0-input" class="form-control reg-input" type="number" autocomplete="off"></td><th>$v0</th><td id="$v0-decimal"></td><td id="$v0-hex"></td><td id="$v0-binary"></td></tr><tr><td><input id="$v1-input" class="form-control reg-input" type="number" autocomplete="off"></td><th>$v1</th><td id="$v1-decimal"></td><td id="$v1-hex"></td><td id="$v1-binary"></td></tr><tr><td colspan="5"></td></tr><tr><td><input id="$a0-input" class="form-control reg-input" type="number" autocomplete="off"></td><th>$a0</th><td id="$a0-decimal"></td><td id="$a0-hex"></td><td id="$a0-binary"></td></tr><tr><td><input id="$a1-input" class="form-control reg-input" type="number" autocomplete="off"></td><th>$a1</th><td id="$a1-decimal"></td><td id="$a1-hex"></td><td id="$a1-binary"></td></tr><tr><td><input id="$a2-input" class="form-control reg-input" type="number" autocomplete="off"></td><th>$a2</th><td id="$a2-decimal"></td><td id="$a2-hex"></td><td id="$a2-binary"></td></tr><tr><td><input id="$a3-input" class="form-control reg-input" type="number" autocomplete="off"></td><th>$a3</th><td id="$a3-decimal"></td><td id="$a3-hex"></td><td id="$a3-binary"></td></tr><tr><td colspan="5"></td></tr><tr><td><input id="$t0-input" class="form-control reg-input" type="number" autocomplete="off"></td><th>$t0</th><td id="$t0-decimal"></td><td id="$t0-hex"></td><td id="$t0-binary"></td></tr><tr><td><input id="$t1-input" class="form-control reg-input" type="number" autocomplete="off"></td><th>$t1</th><td id="$t1-decimal"></td><td id="$t1-hex"></td><td id="$t1-binary"></td></tr><tr><td><input id="$t2-input" class="form-control reg-input" type="number" autocomplete="off"></td><th>$t2</th><td id="$t2-decimal"></td><td id="$t2-hex"></td><td id="$t2-binary"></td></tr><tr><td><input id="$t3-input" class="form-control reg-input" type="number" autocomplete="off"></td><th>$t3</th><td id="$t3-decimal"></td><td id="$t3-hex"></td><td id="$t3-binary"></td></tr><tr><td><input id="$t4-input" class="form-control reg-input" type="number" autocomplete="off"></td><th>$t4</th><td id="$t4-decimal"></td><td id="$t4-hex"></td><td id="$t4-binary"></td></tr><tr><td><input id="$t5-input" class="form-control reg-input" type="number" autocomplete="off"></td><th>$t5</th><td id="$t5-decimal"></td><td id="$t5-hex"></td><td id="$t5-binary"></td></tr><tr><td><input id="$t6-input" class="form-control reg-input" type="number" autocomplete="off"></td><th>$t6</th><td id="$t6-decimal"></td><td id="$t6-hex"></td><td id="$t6-binary"></td></tr><tr><td><input id="$t7-input" class="form-control reg-input" type="number" autocomplete="off"></td><th>$t7</th><td id="$t7-decimal"></td><td id="$t7-hex"></td><td id="$t7-binary"></td></tr><tr><td><input id="$t8-input" class="form-control reg-input" type="number" autocomplete="off"></td><th>$t8</th><td id="$t8-decimal"></td><td id="$t8-hex"></td><td id="$t8-binary"></td></tr><tr><td><input id="$t9-input" class="form-control reg-input" type="number" autocomplete="off"></td><th>$t9</th><td id="$t9-decimal"></td><td id="$t9-hex"></td><td id="$t9-binary"></td></tr><tr><td colspan="5"></td></tr><tr><td><input id="$s0-input" class="form-control reg-input" type="number" autocomplete="off"></td><th>$s0</th><td id="$s0-decimal"></td><td id="$s0-hex"></td><td id="$s0-binary"></td></tr><tr><td><input id="$s1-input" class="form-control reg-input" type="number" autocomplete="off"></td><th>$s1</th><td id="$s1-decimal"></td><td id="$s1-hex"></td><td id="$s1-binary"></td></tr><tr><td><input id="$s2-input" class="form-control reg-input" type="number" autocomplete="off"></td><th>$s2</th><td id="$s2-decimal"></td><td id="$s2-hex"></td><td id="$s2-binary"></td></tr><tr><td><input id="$s3-input" class="form-control reg-input" type="number" autocomplete="off"></td><th>$s3</th><td id="$s3-decimal"></td><td id="$s3-hex"></td><td id="$s3-binary"></td></tr><tr><td><input id="$s4-input" class="form-control reg-input" type="number" autocomplete="off"></td><th>$s4</th><td id="$s4-decimal"></td><td id="$s4-hex"></td><td id="$s4-binary"></td></tr><tr><td><input id="$s5-input" class="form-control reg-input" type="number" autocomplete="off"></td><th>$s5</th><td id="$s5-decimal"></td><td id="$s5-hex"></td><td id="$s5-binary"></td></tr><tr><td><input id="$s6-input" class="form-control reg-input" type="number" autocomplete="off"></td><th>$s6</th><td id="$s6-decimal"></td><td id="$s6-hex"></td><td id="$s6-binary"></td></tr><tr><td><input id="$s7-input" class="form-control reg-input" type="number" autocomplete="off"></td><th>$s7</th><td id="$s7-decimal"></td><td id="$s7-hex"></td><td id="$s7-binary"></td></tr>
+                    <tr>
+                        <td><input id="$v0-input" class="form-control reg-input" type="number" autocomplete="off"></td>
+                        <th>$v0</th>
+                        <td id="$v0-decimal"></td>
+                        <td id="$v0-hex"></td>
+                        <td id="$v0-binary"></td>
+                    </tr>
+                    <tr>
+                        <td><input id="$v1-input" class="form-control reg-input" type="number" autocomplete="off"></td>
+                        <th>$v1</th>
+                        <td id="$v1-decimal"></td>
+                        <td id="$v1-hex"></td>
+                        <td id="$v1-binary"></td>
+                    </tr>
+                    <tr><td class="table-separator" colspan="5"></td></tr>
+                    <tr>
+                        <td><input id="$a0-input" class="form-control reg-input" type="number" autocomplete="off"></td>
+                        <th>$a0</th>
+                        <td id="$a0-decimal"></td>
+                        <td id="$a0-hex"></td>
+                        <td id="$a0-binary"></td>
+                    </tr>
+                    <tr>
+                        <td><input id="$a1-input" class="form-control reg-input" type="number" autocomplete="off"></td>
+                        <th>$a1</th>
+                        <td id="$a1-decimal"></td>
+                        <td id="$a1-hex"></td>
+                        <td id="$a1-binary"></td>
+                    </tr>
+                    <tr>
+                        <td><input id="$a2-input" class="form-control reg-input" type="number" autocomplete="off"></td>
+                        <th>$a2</th>
+                        <td id="$a2-decimal"></td>
+                        <td id="$a2-hex"></td>
+                        <td id="$a2-binary"></td>
+                    </tr>
+                    <tr>
+                        <td><input id="$a3-input" class="form-control reg-input" type="number" autocomplete="off"></td>
+                        <th>$a3</th>
+                        <td id="$a3-decimal"></td>
+                        <td id="$a3-hex"></td>
+                        <td id="$a3-binary"></td>
+                    </tr>
+                    <tr><td class="table-separator" colspan="5"></td></tr>
+                    <tr>
+                        <td><input id="$t0-input" class="form-control reg-input" type="number" autocomplete="off"></td>
+                        <th>$t0</th>
+                        <td id="$t0-decimal"></td>
+                        <td id="$t0-hex"></td>
+                        <td id="$t0-binary"></td>
+                    </tr>
+                    <tr>
+                        <td><input id="$t1-input" class="form-control reg-input" type="number" autocomplete="off"></td>
+                        <th>$t1</th>
+                        <td id="$t1-decimal"></td>
+                        <td id="$t1-hex"></td>
+                        <td id="$t1-binary"></td>
+                    </tr>
+                    <tr>
+                        <td><input id="$t2-input" class="form-control reg-input" type="number" autocomplete="off"></td>
+                        <th>$t2</th>
+                        <td id="$t2-decimal"></td>
+                        <td id="$t2-hex"></td>
+                        <td id="$t2-binary"></td>
+                    </tr>
+                    <tr>
+                        <td><input id="$t3-input" class="form-control reg-input" type="number" autocomplete="off"></td>
+                        <th>$t3</th>
+                        <td id="$t3-decimal"></td>
+                        <td id="$t3-hex"></td>
+                        <td id="$t3-binary"></td>
+                    </tr>
+                    <tr>
+                        <td><input id="$t4-input" class="form-control reg-input" type="number" autocomplete="off"></td>
+                        <th>$t4</th>
+                        <td id="$t4-decimal"></td>
+                        <td id="$t4-hex"></td>
+                        <td id="$t4-binary"></td>
+                    </tr>
+                    <tr>
+                        <td><input id="$t5-input" class="form-control reg-input" type="number" autocomplete="off"></td>
+                        <th>$t5</th>
+                        <td id="$t5-decimal"></td>
+                        <td id="$t5-hex"></td>
+                        <td id="$t5-binary"></td>
+                    </tr>
+                    <tr>
+                        <td><input id="$t6-input" class="form-control reg-input" type="number" autocomplete="off"></td>
+                        <th>$t6</th>
+                        <td id="$t6-decimal"></td>
+                        <td id="$t6-hex"></td>
+                        <td id="$t6-binary"></td>
+                    </tr>
+                    <tr>
+                        <td><input id="$t7-input" class="form-control reg-input" type="number" autocomplete="off"></td>
+                        <th>$t7</th>
+                        <td id="$t7-decimal"></td>
+                        <td id="$t7-hex"></td>
+                        <td id="$t7-binary"></td>
+                    </tr>
+                    <tr>
+                        <td><input id="$t8-input" class="form-control reg-input" type="number" autocomplete="off"></td>
+                        <th>$t8</th>
+                        <td id="$t8-decimal"></td>
+                        <td id="$t8-hex"></td>
+                        <td id="$t8-binary"></td>
+                    </tr>
+                    <tr>
+                        <td><input id="$t9-input" class="form-control reg-input" type="number" autocomplete="off"></td>
+                        <th>$t9</th>
+                        <td id="$t9-decimal"></td>
+                        <td id="$t9-hex"></td>
+                        <td id="$t9-binary"></td>
+                    </tr>
+                    <tr><td class="table-separator" colspan="5"></td></tr>
+                    <tr>
+                        <td><input id="$s0-input" class="form-control reg-input" type="number" autocomplete="off"></td>
+                        <th>$s0</th>
+                        <td id="$s0-decimal"></td>
+                        <td id="$s0-hex"></td>
+                        <td id="$s0-binary"></td>
+                    </tr>
+                    <tr>
+                        <td><input id="$s1-input" class="form-control reg-input" type="number" autocomplete="off"></td>
+                        <th>$s1</th>
+                        <td id="$s1-decimal"></td>
+                        <td id="$s1-hex"></td>
+                        <td id="$s1-binary"></td>
+                    </tr>
+                    <tr>
+                        <td><input id="$s2-input" class="form-control reg-input" type="number" autocomplete="off"></td>
+                        <th>$s2</th>
+                        <td id="$s2-decimal"></td>
+                        <td id="$s2-hex"></td>
+                        <td id="$s2-binary"></td>
+                    </tr>
+                    <tr>
+                        <td><input id="$s3-input" class="form-control reg-input" type="number" autocomplete="off"></td>
+                        <th>$s3</th>
+                        <td id="$s3-decimal"></td>
+                        <td id="$s3-hex"></td>
+                        <td id="$s3-binary"></td>
+                    </tr>
+                    <tr>
+                        <td><input id="$s4-input" class="form-control reg-input" type="number" autocomplete="off"></td>
+                        <th>$s4</th>
+                        <td id="$s4-decimal"></td>
+                        <td id="$s4-hex"></td>
+                        <td id="$s4-binary"></td>
+                    </tr>
+                    <tr>
+                        <td><input id="$s5-input" class="form-control reg-input" type="number" autocomplete="off"></td>
+                        <th>$s5</th>
+                        <td id="$s5-decimal"></td>
+                        <td id="$s5-hex"></td>
+                        <td id="$s5-binary"></td>
+                    </tr>
+                    <tr>
+                        <td><input id="$s6-input" class="form-control reg-input" type="number" autocomplete="off"></td>
+                        <th>$s6</th>
+                        <td id="$s6-decimal"></td>
+                        <td id="$s6-hex"></td>
+                        <td id="$s6-binary"></td>
+                    </tr>
+                    <tr>
+                        <td><input id="$s7-input" class="form-control reg-input" type="number" autocomplete="off"></td>
+                        <th>$s7</th>
+                        <td id="$s7-decimal"></td>
+                        <td id="$s7-hex"></td>
+                        <td id="$s7-binary"></td>
+                    </tr>
                 </table>
             </div>
         
         </div>
+                <script> 
+var codeBox = document.getElementById('code-box');
+var editor = CodeMirror.fromTextArea(codeBox, {
+    lineNumbers: true,
+    firstLineNumber: 0
+});
+                </script>
         <script type="text/javascript" src="js/operations.js"></script>
         <script type="text/javascript" src="js/parser.js"></script>
         <script type="text/javascript" src="js/instructionParse.js"></script>

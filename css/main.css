@@ -1,0 +1,94 @@
+body {
+    font-family: "Courier New", Monospace;
+    background-color: #f5f5f5;
+}
+
+#container {
+    width: 100%;
+    height: 100%;
+}
+
+#control-panel {
+    margin: 15px;
+    margin-top: 15px;
+    margin-bottom: 15px;
+    border: 1px solid #;
+}
+
+.control-button {
+    font-size: 18px;
+    font-weight: bold;
+    padding-bottom: 3px;
+}
+
+#code-wrapper {
+    margin-left: -15px;
+    height: 100vh;
+}
+
+.CodeMirror {
+    font-size: 16px;
+    border-right: 1px solid #CCC;
+    height: 100%;
+}
+
+#registers {
+    border: 1px solid #;
+    padding: none;
+}
+
+table {
+    position:relative;
+    left: 15px;
+    margin-right: 0px;
+    font-size: 16px;
+}
+
+
+th {
+    font-size: 18px;
+}
+
+.reg-input {
+    position: relative;
+    top: -4px;
+    height: 24px;
+    width: 135px;
+}
+td[id$="-decimal"] {
+    text-align: right;
+}
+
+.table>tbody>tr>td,
+.table>tbody>tr>th,
+.table>tfoot>tr>td,
+.table>tfoot>tr>th,
+.table>thead>tr>td,
+.table>thead>tr>th {
+    padding: 7px;
+    padding-bottom: 0px;
+    border-top: 1px solid #FFFFFF;
+    border-bottom: 1px solid #999;
+}
+
+.table-striped>tbody>tr:nth-child(2n+1)>td,
+.table-striped>tbody>tr:nth-child(2n+1)>th,
+.table-striped>tfoot>tr:nth-child(2n+1)>td,
+.table-striped>tfoot>tr:nth-child(2n+1)>th,
+.table-striped>thead>tr:nth-child(2n+1)>td,
+.table-striped>thead>tr:nth-child(2n+1)>th {
+    background-color: #ECEFF1;
+    border-top: 1px solid #FFFFFF;
+    border-bottom: 1px solid #999;
+}
+
+.table>tbody>tr>.table-separator,
+.table>tbody>tr:nth-child(2n+1)>.table-separator {
+    height: 10px;
+    background-color: #CFD8DC;
+}
+
+
+
+
+

@@ -1,5 +1,4 @@
 var parser = {
-    codeLocation: 'code-box',
     code: [],
     lines: 0,
     currentLine: 0,
@@ -13,18 +12,18 @@ var parser = {
     },
     // Getting the line as an array of non-whitespace items
     parseLine: function() {
-        return this.nextLine().match(/\S+/g);
+        var line = this.nextLine();
+        if (line == null) {
+            return ["#"];    // Making null lines into commented lines ;)
+        }
+        return line.match(/\S+/g);
     },
     // Reads the file code into parser.code array of lines
     readCode: function() {
         this.currentLine = 0;
-        parser.code = [];
-        var code = document.getElementById(this.codeLocation);
-        code = code.value.split('\n');
-        this.lines = code.length;
-        for (var i = 0; i < code.length; i++) {
-            parser.code.push(code[i]);
-        }
+        this.code = [];
+        this.code = editor.getValue().split('\n');
+        this.lines = this.code.length + 1;
     },
     
     // Will find the location of a procedure in the code
@@ -33,13 +32,20 @@ var parser = {
         var loc;
         procedure += ':';
 
-        for (var i = 0; i < this.lines; i++) {
+        for (var i = 0; i < this.lines - 1; i++) {
             loc = this.code[i].match(/\S+/g);
 
             if (loc != null && loc[0] === procedure) {
                 pLocation = i;
                 break;
             }
+        }
+
+        if (pLocation == null) {
+            var line = "\n\nProcedure: " + procedure + "\nJumped from line: ";
+            line += this.currentLine - 1;
+            alert("You jumped to a procedure that doesn't exist"+line);
+            throw new Error("Procedure doesn't exist: " + procedure);
         }
 
         return pLocation;

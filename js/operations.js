@@ -35,4 +35,33 @@ var j = {
     returnValue: 'j'
 };
 
+var beq = {
+    operation: function(register, operand) {
+        console.log("Branch if: " + reg[register] + " == " + operand[0]);
+        if (reg[register] == operand[0]) {
+            // operand[3] will have branch location for this type of op
+            instructionParse.jumpLocation = parser.findProcedure(operand[4]);
+            this.returnValue = 'j';
+        }
+        else {
+            this.returnValue = 1;
+        }
+    },
+    returnValue: null
+};
+
+var beqz = {
+    operation: function(register, operand) {
+        console.log("Branch if: " + reg[register] + " == 0");
+        if (reg[register] == 0) {
+            // operand[3] will have branch location for this type of op
+            instructionParse.jumpLocation = parser.findProcedure(operand[3]);
+            this.returnValue = 'j';
+        }
+        else {
+            this.returnValue = 1;
+        }
+    },
+    returnValue: null
+};
 

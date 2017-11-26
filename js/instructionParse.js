@@ -1,6 +1,16 @@
 var instructionParse = {
+    reset: function() {
+        this.jumpLocation = 0;
+        this.infiniteLoopCheck = 0;
+    },
     run: function() {
+
+        // Resetting the instructionParse object so that we don't mistakenly
+        // use values from the last run
+        this.reset();
+        // Reading the code from the textarea into the parser
         parser.readCode();
+
         var jump = false;
         var jumpAndLink = false;
         var line;
@@ -31,12 +41,11 @@ var instructionParse = {
                 // Checking for infinite loop because you know it'll happen :P
                 this.infiniteLoopCheck += 1;
                 if (this.infiniteLoopCheck > 5000) {
-                    var m="Nice infinite loop ;)\nI stopped it.";
+                    var m="You have an infinite loop.\nI stopped it.";
                     alert(m);
                     break;
                 }
             }
-
 
             // Setting it up to go into the jump functionality next loop around
             if (result === 'j') {
@@ -50,9 +59,7 @@ var instructionParse = {
             }
         }
 
-        // Have to do stuff here to deal with branches/jumps
-        // NEED A WAY TO RESTART RUNNING THE PROGRAM AT A SPECIFIC LINE!!!!
-
+        // Since the code has finished running, we update registers and output
         reg.updateAll();        
         console.log("******************************");
         console.log("EXECUTION FINISHED");
@@ -69,14 +76,22 @@ var instructionParse = {
         return [reg1, reg2, reg3];
     },
     operandFormat: function(regArray) {
-        var left = parseInt(reg[regArray[0]]);
+        var left;
+        var right;
+        var rightImmediate;
+        var rightLocation;
+        var farRightLocation;
+        left = parseInt(reg[regArray[0]]);
         if (regArray.length > 1) {
-            var right = parseInt(reg[regArray[1]]);
+            right = parseInt(reg[regArray[1]]);
             // If the right operand is an immediate, use this
-            var rightImmediate = parseInt(regArray[1]);
+            rightImmediate = parseInt(regArray[1]);
+            // If it's a branch with single register, this will have location
+            rightLocation = regArray[0];
+            farRightLocation = regArray[1];
         }
 
-        return [left, right, rightImmediate];
+        return [left, right, rightImmediate, rightLocation, farRightLocation];
     },
 
     // This will read each line and send the line to the correct function
@@ -99,6 +114,10 @@ var instructionParse = {
             }
         }
         else {
+
+            // Checking for the correct comma's in the line
+            this.commaCheck(line);
+
             // Getting the registers & an array of possible operands
             var registers = this.iType(line);
             var operands = this.operandFormat([registers[1], registers[2]]);
@@ -114,6 +133,26 @@ var instructionParse = {
         return 1;
         
     },
+
+    // Function that will check the line for correct comma placement
+    commaCheck: function(line) {
+        if (line.length >= 3) {
+            
+            // Joining the space-split line, then splitting on commas
+            var split = line.join("").split(',');
+            
+            // Could probably simplify this, but it's readable this way
+            if (line.length > split.length + 1) {
+                this.commaError();
+            }
+        }
+    },
+    commaError: function() {
+        alert("Missing comma:\n\nLine: " + (parser.currentLine - 1));
+        throw new Error("Missing a comma");
+    },
+    
+    // These store the line of the code to jump to, and the amount of jumps
     jumpLocation: 0,
     infiniteLoopCheck: 0
 };

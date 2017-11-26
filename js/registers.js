@@ -66,9 +66,31 @@ var reg = {
                 && document.getElementById(property + "-input") != null) {
 
                 if (document.getElementById(property + "-input").value) {
-                    console.log(property + " = " + document.getElementById(property + "-input").value);
                     this[property] = document.getElementById(property + "-input").value;
                 }
+            }
+        }
+    },
+
+    // This function will reset all the "Initial Value" inputs to 0
+    resetInitialValues: function() {
+        for (var property in this) {
+            if (this.hasOwnProperty(property)
+                && document.getElementById(property + "-input") != null) {
+
+                document.getElementById(property + "-input").value = 0;
+            }
+        }
+    },
+
+    // This function moves values from right side to inputs
+    setValues: function() {
+        for (var property in this) {
+            if (this.hasOwnProperty(property)
+                && document.getElementById(property + "-input") != null) {
+
+                var v = document.getElementById(property + '-decimal').innerHTML;
+                document.getElementById(property + "-input").value = v;
             }
         }
     },
