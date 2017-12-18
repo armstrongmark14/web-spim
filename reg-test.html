@@ -1,0 +1,33 @@
+<!doctype html>
+<html>
+    <head>
+        <title></title>
+        <script>
+
+var leadingSpace = "\^\\s*?"
+var register= "\\s+(\\$v[0-1]|\\$a[0-3]|\\$[st][0-9]|\\$0)";
+var comment= "(?:\\s+?#.*?)?$";
+var comma= ",";
+
+var line = " # add $t1, $v0, $s2 #MARK SUCKS";
+
+console.log("MARK");
+
+var reg = new RegExp(leadingSpace + "#.*");
+
+console.log(reg.exec(line));
+console.log(reg.test(line));
+
+var t = reg.exec(line);
+
+if (t) {
+    console.log("MARKY SUCKS");
+}
+
+        </script>
+    </head>
+    <body>
+
+    </body>
+</html>
+

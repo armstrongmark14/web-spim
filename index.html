@@ -19,14 +19,12 @@
                 
                 <div id="code-wrapper" class="col-md-4">
                     <textarea id="code-box">
-main:
-    add $t1, $t3, $t2
+    add $t1, $t9, $t2 #marky
     add $t0, $0, $t1
     addi $t9, $t2, 5
     sub $t1, $t2, $t3
 
 newMethod:
-    j mark
     sll $t0, $t0, 5
     addi $t1, $t0, 9
 
@@ -238,6 +236,7 @@ var editor = CodeMirror.fromTextArea(codeBox, {
     firstLineNumber: 0
 });
                 </script>
+        <script type="text/javascript" src="js/regex.js"></script>
         <script type="text/javascript" src="js/operations.js"></script>
         <script type="text/javascript" src="js/parser.js"></script>
         <script type="text/javascript" src="js/instructionParse.js"></script>

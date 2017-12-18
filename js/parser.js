@@ -13,17 +13,17 @@ var parser = {
     // Getting the line as an array of non-whitespace items
     parseLine: function() {
         var line = this.nextLine();
-        if (line == null) {
-            return ["#"];    // Making null lines into commented lines ;)
+        if (regex.isEmptyLine(line)) {
+            return "#";    // Making null lines into commented lines ;)
         }
-        return line.match(/\S+/g);
+        return line;
     },
     // Reads the file code into parser.code array of lines
     readCode: function() {
         this.currentLine = 0;
         this.code = [];
         this.code = editor.getValue().split('\n');
-        this.lines = this.code.length + 1;
+        this.lines = this.code.length;
     },
     
     // Will find the location of a procedure in the code
@@ -54,6 +54,11 @@ var parser = {
     // This will allow you to execute a jump and change current read location
     jumpTo: function(newLocation) {
         this.currentLine = newLocation;
+    },
+
+    // Function for getting the actual line we're working with. -For Errors
+    getCurrentLine: function() {
+        return this.currentLine - 1;
     }
 };
 

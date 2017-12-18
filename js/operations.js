@@ -1,27 +1,39 @@
 var add = {
-    operation: function(register, operand) {
-        reg[register] = operand[0] + operand[1];
+    operation: function(op) {
+        reg[op[1]] = reg.getV(op[2]) + reg.getV(op[3]);
+    },
+    readInstruction: function(line) {
+        return regex.rType('add', line);
     },
     returnValue: 1
 };
 
 var addi = {
-    operation: function(register, operand) {
-        reg[register] = operand[0] + operand[2];
+    operation: function(op) {
+        reg[op[1]] = reg.getV(op[2]) + op[3];
+    },
+    readInstruction: function(line) {
+        return regex.iType('addi', line);
     },
     returnValue: 1
 };
 
 var sub = {
-    operation: function(register, operand) {
-        reg[register] = operand[0] - operand[1];
+    operation: function(op) {
+        reg[op[1]] = reg.getV(op[2]) - reg.getV(op[3]);
+    },
+    readInstruction: function(line) {
+        return regex.rType('sub', line);
     },
     returnValue: 1
 };
 
 var sll = {
-    operation: function(register, operand) {
-        reg[register] = operand[0] << operand[2];
+    operation: function(op) {
+        reg[op[1]] = reg.getV(op[2]) << op[3];
+    },
+    readInstruction: function(line) {
+        return regex.iType('sll', line);
     },
     returnValue: 1
 };

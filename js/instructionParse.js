@@ -22,7 +22,6 @@ var instructionParse = {
 
             // Parsing the current line
             line = parser.parseLine();
-            console.log(line);
 
             result = instructionParse.read(line);
             
@@ -65,92 +64,56 @@ var instructionParse = {
         console.log("EXECUTION FINISHED");
     },
 
-    // Getting the register and immediate values from i-type instructions
-    iType: function(line) {
-        var reg1 = line[1].replace(/,/g, '');
-        var reg2, reg3;
-        if (line.length > 2) {
-            reg2 = line[2].replace(/,/g, '');
-            reg3 = line[3];
-        }
-        return [reg1, reg2, reg3];
-    },
-    operandFormat: function(regArray) {
-        var left;
-        var right;
-        var rightImmediate;
-        var rightLocation;
-        var farRightLocation;
-        left = parseInt(reg[regArray[0]]);
-        if (regArray.length > 1) {
-            right = parseInt(reg[regArray[1]]);
-            // If the right operand is an immediate, use this
-            rightImmediate = parseInt(regArray[1]);
-            // If it's a branch with single register, this will have location
-            rightLocation = regArray[0];
-            farRightLocation = regArray[1];
-        }
-
-        return [left, right, rightImmediate, rightLocation, farRightLocation];
-    },
-
     // This will read each line and send the line to the correct function
     // that will execute it
     read: function(line) {
-        if (line === null) { return; }
-
-        // console.log(line);
-
-        // This portion will perform operations on comments, procedure headings
-        if (line[0].charAt(0) === '#') {
-            // This line is a comment
-            // console.log("COMMENT LINE");
+        if (line === null) {
+            // Line is null, so skip the rest
+            return;
         }
-        // If it is a procedure declaration
-        else if (line[0].charAt(line[0].length - 1) === ':') {
-            // console.log("PROCEDURE DEFINITION");
-            if (line[0] === 'programExit:') {
+        
+        if (regex.isCommentLine(line)) {
+            // This line is a comment so do nothing
+        }
+        else if (regex.isProcedure(line)) {
+            // If it is a procedure declaration
+            // console.log("Procedure: " + regex.getProcedureName(line));
+            if (regex.getProcedureName(line) == 'programExit') {
                 return 'exit';
             }
         }
         else {
-
-            // Checking for the correct comma's in the line
-            this.commaCheck(line);
-
-            // Getting the registers & an array of possible operands
-            var registers = this.iType(line);
-            var operands = this.operandFormat([registers[1], registers[2]]);
-
-            // This will perform the operation given the operation exists
-            // by using the correct operation object's .operation()
-            var instruction = window[line[0]];
-            instruction.operation(registers[0], operands);
-
-            return instruction.returnValue;
+            // If it's none of those, we'll see if it is a correct operation
+            return this.performOperation(line);
         }
 
         return 1;
         
     },
 
-    // Function that will check the line for correct comma placement
-    commaCheck: function(line) {
-        if (line.length >= 3) {
-            
-            // Joining the space-split line, then splitting on commas
-            var split = line.join("").split(',');
-            
-            // Could probably simplify this, but it's readable this way
-            if (line.length > split.length + 1) {
-                this.commaError();
-            }
+    // Performs the selected operation on the line
+    performOperation: function(line) {
+        // Checking for the correct comma's in the line
+        // console.log(line);
+        var operation = regex.getOperationCode(line);
+
+        // Converting the operation into the operation object we have created
+        var instruction = window[operation];
+        if (instruction == undefined) {
+            // If the operation object for the instruction does not exist
+            throw new Error("Operation doesn't exist. Line: " + parser.getCurrentLine());
         }
+
+        var instructionArray = instruction.readInstruction(line);
+        console.log(instructionArray);
+        if (instructionArray === null) {
+            throw new Error("Operation syntax is incorrect. Line: " + parser.getCurrentLine());
+        }
+        instruction.operation(instructionArray);
+
+        return instruction.returnValue;
     },
-    commaError: function() {
-        alert("Missing comma:\n\nLine: " + (parser.currentLine - 1));
-        throw new Error("Missing a comma");
-    },
+
     
     // These store the line of the code to jump to, and the amount of jumps
     jumpLocation: 0,

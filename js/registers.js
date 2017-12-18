@@ -83,6 +83,11 @@ var reg = {
         }
     },
 
+    // Function for getting a desimal value of a register
+    getV: function(regName) {
+        return parseInt(this[regName]);
+    },
+
     // This function moves values from right side to inputs
     setValues: function() {
         for (var property in this) {

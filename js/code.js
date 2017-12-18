@@ -1,8 +1,3 @@
-
-reg.updateAll();
-
-reg.loadValues();
-
 function run() {
     console.log(parser.lines);
     reg.loadValues();
