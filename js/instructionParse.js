@@ -1,7 +1,7 @@
 var instructionParse = {
     reset: function() {
         this.jumpLocation = 0;
-        this.infiniteLoopCheck = 0;
+        this.infiniteLoopCounter = 0;
     },
     run: function() {
 
@@ -27,7 +27,7 @@ var instructionParse = {
             
             // Doing this right after the instruction is read so we go around
             // again if we break for the load/branch/jump delay slot :)
-            if (jump) {
+            if (jump && result != 'comment' && result != 'procedure') {
                 if (jumpAndLink) {
 
                 }
@@ -38,8 +38,8 @@ var instructionParse = {
                 jump = false;
 
                 // Checking for infinite loop because you know it'll happen :P
-                this.infiniteLoopCheck += 1;
-                if (this.infiniteLoopCheck > 5000) {
+                this.infiniteLoopCounter += 1;
+                if (this.infiniteLoopCounter > settings.loopStop) {
                     var m="You have an infinite loop.\nI stopped it.";
                     alert(m);
                     break;
@@ -74,6 +74,9 @@ var instructionParse = {
         
         if (regex.isCommentLine(line)) {
             // This line is a comment so do nothing
+            // We also need to return 'comment' so that we know to skip this 
+            // line for jumps/branch/load delay slow purposes
+            return 'comment';
         }
         else if (regex.isProcedure(line)) {
             // If it is a procedure declaration
@@ -81,6 +84,7 @@ var instructionParse = {
             if (regex.getProcedureName(line) == 'programExit') {
                 return 'exit';
             }
+            return 'procedure';
         }
         else {
             // If it's none of those, we'll see if it is a correct operation

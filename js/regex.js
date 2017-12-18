@@ -4,7 +4,7 @@ var regex = {
     comment: "(?:\\s+?#.*?)?$",
     comma: ",",
     immediate: "\\s+(-?\\d+|0x[a-fA-F0-9]+)", // TO DO
-    procedure: "", // TO DO
+    procedure: "\\s+(\\w+)", // TO DO
 
     // Regex for r-type instructions. These have 3 registers used
     rType: function(instruction, line) {
@@ -27,6 +27,15 @@ var regex = {
         var result = reg.exec(line);
         result[3] = this.convertToInteger(result[3]);
         return result;
+    },
+
+    // Regex for a simple jump
+    simpleJump: function(instruction, line) {
+        var l = this.leadingSpace;
+        var p = this.procedure;
+        var comment = this.comment;
+        var reg = new RegExp(l + instruction + p + comment);
+        return reg.exec(line);
     },
 
     // This function gets the operation code for the instruction

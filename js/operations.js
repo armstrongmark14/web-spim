@@ -39,10 +39,12 @@ var sll = {
 };
 
 var j = {
-    operation: function(procedure) {
-        // Sending the location we need to change to to the instructionParse
-        // We add 1 to it because that's the next location after the header
-        instructionParse.jumpLocation = parser.findProcedure(procedure);
+    operation: function(op) {
+        // op[1] will hold the jump procedure name from the regex
+        instructionParse.jumpLocation = parser.findProcedure(op[1]);
+    },
+    readInstruction: function(line) {
+        return regex.simpleJump('j', line);
     },
     returnValue: 'j'
 };
