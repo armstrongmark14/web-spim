@@ -39,7 +39,7 @@ var instructionParse = {
 
                 // Checking for infinite loop because you know it'll happen :P
                 this.infiniteLoopCounter += 1;
-                if (this.infiniteLoopCounter > settings.loopStop) {
+                if (this.infiniteLoopCounter > settings.jumpLimit) {
                     var m="You have an infinite loop.\nI stopped it.";
                     alert(m);
                     break;
@@ -86,36 +86,34 @@ var instructionParse = {
             }
             return 'procedure';
         }
-        else {
-            // If it's none of those, we'll see if it is a correct operation
-            return this.performOperation(line);
-        }
 
-        return 1;
-        
+        // If it's none of those, we'll check if it's an operation and do it
+        return this.performOperation(line);
     },
 
     // Performs the selected operation on the line
     performOperation: function(line) {
         // Checking for the correct comma's in the line
         // console.log(line);
-        var operation = regex.getOperationCode(line);
+        var code = regex.getOperationCode(line);
 
-        // Converting the operation into the operation object we have created
-        var instruction = window[operation];
-        if (instruction == undefined) {
-            // If the operation object for the instruction does not exist
-            throw new Error("Operation doesn't exist. Line: " + parser.getCurrentLine());
+        // Checking if the operation exists
+        if (operations[code] == undefined) {
+            error.invalidOperation(parser.getCurrentLine());
         }
 
-        var instructionArray = instruction.readInstruction(line);
+        var instructionArray = operations[code].readInstruction(line);
         console.log(instructionArray);
-        if (instructionArray === null) {
-            throw new Error("Operation syntax is incorrect. Line: " + parser.getCurrentLine());
-        }
-        instruction.operation(instructionArray);
 
-        return instruction.returnValue;
+        if (instructionArray === null) {
+            error.syntaxError(parser.getCurrentLine());
+        }
+
+        // This will perform the desired operation using the register values
+        // and immediates that were obtained from the line
+        operations[code].operation(instructionArray);
+
+        return operations[code].returnValue;
     },
 
     

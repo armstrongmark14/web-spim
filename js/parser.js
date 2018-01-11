@@ -24,28 +24,24 @@ var parser = {
         this.code = [];
         this.code = editor.getValue().split('\n');
         this.lines = this.code.length;
+        // this.code[this.lines] += '\n';
     },
     
     // Will find the location of a procedure in the code
     findProcedure: function(procedure) {
         var pLocation = null;
-        var loc;
-        procedure += ':';
+        var r = new RegExp('\^\\s*' + procedure + ':');
 
+        // finding the procedure if it's in the code
         for (var i = 0; i < this.lines - 1; i++) {
-            loc = this.code[i].match(/\S+/g);
-
-            if (loc != null && loc[0] === procedure) {
+            if (r.test(this.code[i])) {
                 pLocation = i;
                 break;
             }
         }
 
         if (pLocation == null) {
-            var line = "\n\nProcedure: " + procedure + "\nJumped from line: ";
-            line += this.currentLine - 1;
-            alert("You jumped to a procedure that doesn't exist"+line);
-            throw new Error("Procedure doesn't exist: " + procedure);
+            error.invalidJumpLocation(procedure, this.getCurrentLine());
         }
 
         return pLocation;

@@ -1,8 +1,9 @@
 var regex = {
+    // These are the pieces of RegExp used for getting instruction parts
     leadingSpace: "\^\\s*?",
     register: "\\s+(\\$v[0-1]|\\$a[0-3]|\\$[st][0-9]|\\$0)",
-    comment: "(?:\\s+?#.*?)?$",
-    comma: ",",
+    comment: "(?:\\s+?#?.*?)?\$",
+    comma: ",?",
     immediate: "\\s+(-?\\d+|0x[a-fA-F0-9]+)", // TO DO
     procedure: "\\s+(\\w+)", // TO DO
 
@@ -36,6 +37,30 @@ var regex = {
         var comment = this.comment;
         var reg = new RegExp(l + instruction + p + comment);
         return reg.exec(line);
+    },
+
+    // Regex for branches with a single register and then a procedure
+    branchOneReg: function(instruction, line) {
+        var l = this.leadingSpace;
+        var r = this.register;
+        var p = this.procedure;
+        var c = this.comma;
+        var comment = this.comment;
+        var reg = new RegExp(l + instruction + r + c + p + comment);
+        var result = reg.exec(line);
+        return result;
+    },
+
+    // Regex for branches with 2 register values and a procedure name
+    branchTwoReg: function(instruction, line) {
+        var l = this.leadingSpace;
+        var r = this.register;
+        var p = this.procedure;
+        var c = this.comma;
+        var comment = this.comment;
+        var reg = new RegExp(l + instruction + r + c + r + c + p + comment);
+        var result = reg.exec(line);
+        return result;
     },
 
     // This function gets the operation code for the instruction
