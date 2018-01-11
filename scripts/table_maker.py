@@ -12,21 +12,13 @@ def makeRow(i, d):
 def separator():
     file.write("<tr><td class=\"table-separator\" colspan=\"5\"></td></tr>\n")
 
-for i in range(0, 2):
-    makeRow("v", i)
-separator()
+def createRegisters(letter, amount):
+    for i in range(0, amount):
+        makeRow(letter, i)
+    separator()
 
-for i in range(0, 4):
-    makeRow("a", i)
-separator()
-
-for i in range(0, 10):
-    makeRow("t", i)
-separator()
-
-for i in range(0, 8):
-    makeRow("s", i)
-separator()
-
-
+createRegisters("v", 2)
+createRegisters("a", 4)
+createRegisters("t", 10)
+createRegisters("s", 9)
 
