@@ -63,6 +63,17 @@ var regex = {
         return result;
     },
 
+    // Regex for an instruction with only 2 registers
+    twoRegOnly: function(instruction, line) {
+        var l = this.leadingSpace;
+        var r = this.register;
+        var c = this.comma;
+        var comment = this.comment;
+        var reg = new RegExp(l + instruction + r + c + r + comment);
+        var result = reg.exec(line);
+        return result;
+    },
+
     // This function gets the operation code for the instruction
     getOperationCode: function(line) {
         var reg = new RegExp("\\w+");

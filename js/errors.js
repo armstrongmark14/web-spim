@@ -30,4 +30,10 @@ var error = {
         var msg = "Loop limit reached. Check for infinite loops";
         throw new Error(msg);          
     },
+
+    // Infinite loop || Loop Limiter reached
+    overflow: function(lineNumber) {
+        var msg = "Arithmetic overflow. Line: " + lineNumber;
+        this.showError(msg);
+    },
 };
