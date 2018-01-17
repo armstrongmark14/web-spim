@@ -21,19 +21,7 @@ var reg = {
 
     // returns a string representation of register in Binary
     binary: function(register) {
-        var value = parseInt(this[register], 10).toString(2);
-        var pad = '0';
-        var padding = '';
-
-        if (this[register] < 0) {
-            value = (this[register] >>> 0).toString(2);
-            pad = '1';
-        }
-        
-        for (var i = 0; i < 32 - value.length; i++) {
-            padding += pad;
-        }
-        return padding + value;
+        return this.decimalToBinary(this[register]);
     },
 
     // This will update the register table of a specific register
@@ -98,6 +86,24 @@ var reg = {
                 document.getElementById(property + "-input").value = v;
             }
         }
+    },
+
+    // This function takes a decimal num and converts it to 32-bit padded binary
+    // string representation
+    decimalToBinary: function(num) {
+        var value = num.toString(2);
+        var pad = '0';
+        var padding = '';
+
+        if (num < 0) {
+            value = (num >>> 0).toString(2);
+            pad = '1';
+        }
+        
+        for (var i = 0; i < 32 - value.length; i++) {
+            padding += pad;
+        }
+        return padding + value;
     },
     
     // THIS REGISTER MUST ALWAYS BE 0

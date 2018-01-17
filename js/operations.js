@@ -1,4 +1,9 @@
 var operations = {
+    checkOverflow: function(num) {
+        if (num < -2147483648 || num > 2147483647) {
+            error.overflow(parser.getCurrentLine());
+        }
+    },
 /*
  *****************************************************************************
  * ARITHMETIC OPERATIONS
@@ -8,9 +13,7 @@ var operations = {
     add: {
         operation: function(op) {
             reg[op[1]] = reg.getV(op[2]) + reg.getV(op[3]);
-            if (reg[op[1]] < -2147483648 || reg[op[1]] > 2147483647) {
-                error.overflow(parser.getCurrentLine());
-            }
+            operations.checkOverflow(reg[op[1]]);
         },
         readInstruction: function(line) {
             return regex.rType('add', line);
@@ -33,9 +36,7 @@ var operations = {
     addi: {
         operation: function(op) {
             reg[op[1]] = reg.getV(op[2]) + op[3];
-            if (reg[op[1]] < -2147483648 || reg[op[1]] > 2147483647) {
-                error.overflow(parser.getCurrentLine());
-            }
+            operations.checkOverflow(reg[op[1]]);
         },
         readInstruction: function(line) {
             return regex.iType('addi', line);
@@ -54,13 +55,25 @@ var operations = {
         returnValue: 1
     },
 
-    // Subtraction operation
+    // Subtraction operation WITH OVERFLOW
     sub: {
+        operation: function(op) {
+            reg[op[1]] = reg.getV(op[2]) - reg.getV(op[3]);
+            operations.checkOverflow(reg[op[1]]);
+        },
+        readInstruction: function(line) {
+            return regex.rType('sub', line);
+        },
+        returnValue: 1
+    },
+
+    // Subtraction operation WITHOUT OVERFLOW
+    subu: {
         operation: function(op) {
             reg[op[1]] = reg.getV(op[2]) - reg.getV(op[3]);
         },
         readInstruction: function(line) {
-            return regex.rType('sub', line);
+            return regex.rType('subu', line);
         },
         returnValue: 1
     },
@@ -126,19 +139,43 @@ var operations = {
     // Logical OR operation
     or: {
         operation: function(op) {
-            var num = reg.binary(op[2]);
-            var num2 = reg.binary(op[3]);
-            var result = '';
-            for (var i = 0; i < 32; i++) {
-                if (num.charAt(i) === '1' && num2.charAt(i) === '1') {
-                    result += '1';
-                }
-                else { result += '0'; }
-            }
-            reg[op[1]] = parseInt(result, 2);
+            reg[op[1]] = reg.getV(op[2]) | reg.getV(op[3]);
         },
         readInstruction: function(line) {
             return regex.rType('or', line);
+        },
+        returnValue: 1
+    },
+
+    // Logical OR against an immediate value
+    ori: {
+        operation: function(op) {
+            reg[op[1]] = reg.getV(op[2]) | op[3];
+        },
+        readInstruction: function(line) {
+            return regex.iType('ori', line);
+        },
+        returnValue: 1
+    },
+
+    // Exclusive OR operation = XOR
+    xor: {
+        operation: function(op) {
+            reg[op[1]] = reg.getV(op[2]) ^ reg.getV(op[3]);
+        },
+        readInstruction: function(line) {
+            return regex.rType('xor', line);
+        },
+        returnValue: 1
+    },
+
+    // Exclusive OR operation WITH IMMEDIATE = XOR
+    xori: {
+        operation: function(op) {
+            reg[op[1]] = reg.getV(op[2]) ^ op[3];
+        },
+        readInstruction: function(line) {
+            return regex.iType('xori', line);
         },
         returnValue: 1
     },
@@ -195,14 +232,62 @@ var operations = {
         },
         returnValue: 1
     },
+    
+    // Shift Left Logical by a VARIABLE amount
+    sllv: {
+        operation: function(op) {
+            reg[op[1]] = reg.getV(op[2]) << reg.getV(op[3]);
+        },
+        readInstruction: function(line) {
+            return regex.rType('sllv', line);
+        },
+        returnValue: 1
+    },
 
     // Shift Right Logical operation
+    // This one inserts 0's into the upper bits shifted in
     srl: {
         operation: function(op) {
             reg[op[1]] = reg.getV(op[2]) >>> op[3];
         },
         readInstruction: function(line) {
             return regex.iType('srl', line);
+        },
+        returnValue: 1
+    },
+
+    // Shift Right Logical operation VARIABLE AMOUNT
+    // This one inserts 0's into the upper bits shifted in
+    srlv: {
+        operation: function(op) {
+            reg[op[1]] = reg.getV(op[2]) >>> reg.getV(op[3]);
+        },
+        readInstruction: function(line) {
+            return regex.rType('srlv', line);
+        },
+        returnValue: 1
+    },
+
+    // Shift Right Arithmetic operation
+    // This one inserts 1's into the upper bits shifted in IF NEGATIVE
+    sra: {
+        operation: function(op) {
+            reg[op[1]] = reg.getV(op[2]) >> op[3];
+        },
+        readInstruction: function(line) {
+            return regex.iType('sra', line);
+        },
+        returnValue: 1
+    },
+
+    // Shift Right Arithmetic operation VARIABLE AMOUNT
+    // This one inserts 1's into the upper bits shifted in IF NEGATIVE
+    srav: {
+        operation: function(op) {
+            reg[op[1]] = reg.getV(op[2]) >> reg.getV(op[3]);
+        },
+        readInstruction: function(line) {
+            return regex.rType('srav', line);
         },
         returnValue: 1
     },
@@ -350,4 +435,25 @@ var operations = {
         },
         returnValue: 1
     },
+/*
+ *****************************************************************************
+ * LOAD OPERATIONS
+ *****************************************************************************
+*/
+    // Load upper immediate
+    lui: {
+        operation: function(op) {
+            reg[op[1]] = op[2] << 16;
+        },
+        readInstruction: function(line) {
+            // this.returnValue = 1;
+            return regex.oneRegOneImmediate('lui', line);
+        },
+        returnValue: 1
+    },
+/*
+ *****************************************************************************
+ * SET OPERATIONS
+ *****************************************************************************
+*/
 };

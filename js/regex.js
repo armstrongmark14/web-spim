@@ -73,6 +73,18 @@ var regex = {
         var result = reg.exec(line);
         return result;
     },
+    
+    // Regex for instruction with one register and an immediate
+    oneRegOneImmediate: function(instruction, line) {
+        var l = this.leadingSpace;
+        var r = this.register;
+        var i = this.immediate;
+        var c = this.comma;
+        var comment = this.comment;
+        var reg = new RegExp(l + instruction + r + c + i + comment);
+        var result = reg.exec(line);
+        return result;
+    },
 
     // This function gets the operation code for the instruction
     getOperationCode: function(line) {
