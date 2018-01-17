@@ -456,4 +456,72 @@ var operations = {
  * SET OPERATIONS
  *****************************************************************************
 */
+    // Set Less Than - Sets leftmost reg to 1 if second is less than third
+    slt: {
+        operation: function(op) {
+            var result = 0;
+            if (reg.getV(op[2]) < reg.getV(op[3])) {
+                result = 1;
+            }
+            reg[op[1]] = result;
+        },
+        readInstruction: function(line) {
+            // this.returnValue = 1;
+            return regex.rType('slt', line);
+        },
+        returnValue: 1
+    },
+
+    // Set less than unsigned. Treats numbers as unsigned 
+    sltu: {
+        operation: function(op) {
+            var result = 0;
+            var num = reg.getV(op[2]) >>> 0;
+            var num2 = reg.getV(op[3]) >>> 0;
+            if (num < num2) {
+                result = 1;
+            }
+            reg[op[1]] = result;
+        },
+        readInstruction: function(line) {
+            // this.returnValue = 1;
+            return regex.rType('sltu', line);
+        },
+        returnValue: 1
+    },
+
+    // Set less than compared to an immediate
+    slti: {
+        operation: function(op) {
+            var result = 0;
+            if (reg.getV(op[2]) < op[3]) {
+                result = 1;
+            }
+            reg[op[1]] = result;
+        },
+        readInstruction: function(line) {
+            // this.returnValue = 1;
+            return regex.iType('slti', line);
+        },
+        returnValue: 1
+    },
+
+    // Set less than immediate UNSIGNED
+    sltiu: {
+        operation: function(op) {
+            var result = 0;
+            var num = reg.getV(op[2]) >>> 0;
+            var num2 = op[3] >>> 0;
+            if (num < num2) {
+                result = 1;
+            }
+            reg[op[1]] = result;
+        },
+        readInstruction: function(line) {
+            // this.returnValue = 1;
+            return regex.iType('sltiu', line);
+        },
+        returnValue: 1
+    },
+
 };

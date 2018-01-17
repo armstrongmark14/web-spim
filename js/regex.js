@@ -83,6 +83,7 @@ var regex = {
         var comment = this.comment;
         var reg = new RegExp(l + instruction + r + c + i + comment);
         var result = reg.exec(line);
+        result[2] = this.convertToInteger(result[2]);
         return result;
     },
 
