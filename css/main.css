@@ -33,6 +33,11 @@ body {
     height: 100%;
 }
 
+.highlighted-line {
+    background-color: #FFCDD2;
+    color: #000;
+}
+
 #registers {
     border: 1px solid #;
     padding: none;

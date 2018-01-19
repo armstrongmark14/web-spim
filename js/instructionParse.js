@@ -42,9 +42,10 @@ var instructionParse = {
     // This will read each line and send the line to the correct function
     // that will execute it
     read: function(line) {
+        // Updating the registers and UI after performing the operation
         if (this.stepThroughStarted) {
-            ui.updateLinesCompleted(program.getCurrentLine(), program.lines - 1);
-            reg.updateAll();
+            ui.updateLinesCompleted();
+            ui.highlightCurrentLine();
         }
 
         // This variable will be false if we shouldn't run the operation
@@ -60,8 +61,13 @@ var instructionParse = {
             result = this.performOperation(line); 
         }
 
+        // Updating the registers and UI after performing the operation
+        if (this.stepThroughStarted) {
+            reg.updateAll();
+        }
+
+        // Checking if this was the last line, if so ending things
         if (program.isFinished()) {
-            console.log("ALL LINES RUN");
             // Have to reset the step through to false since we finished
             this.stepThroughStarted = false;
             return false;
@@ -73,7 +79,6 @@ var instructionParse = {
     // Performs the selected operation on the line
     performOperation: function(line) {
         // Checking for the correct comma's in the line
-        // console.log(line);
         var code = regex.getOperationCode(line);
 
         // Checking if the operation exists

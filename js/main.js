@@ -10,6 +10,7 @@ function runFullProgram() {
 }
 
 function runNextLine() {
+    ui.clearHighlightedLines();
     if (! instructionParse.stepThroughStarted) {
         // Have to load in the register values and update them first thing
         reg.loadValues();
@@ -39,6 +40,7 @@ function resetSimulator() {
     reg.loadValues();
     reg.updateAll();
     // Resetting the UI pieces
-    ui.updateLinesCompleted(0, 0);
+    ui.clearHighlightedLines();
+    ui.updateLinesCompleted();
 }
 
