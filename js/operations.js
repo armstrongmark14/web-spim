@@ -1,7 +1,7 @@
 var operations = {
     checkOverflow: function(num) {
         if (num < -2147483648 || num > 2147483647) {
-            error.overflow(parser.getCurrentLine());
+            error.overflow(program.getCurrentLine());
         }
     },
 /*
@@ -302,7 +302,7 @@ var operations = {
     j: {
         operation: function(op) {
             // op[1] will hold the jump procedure name from the regex
-            instructionParse.jumpLocation = parser.findProcedure(op[1]);
+            instructionParse.jumpLocation = program.findProcedure(op[1]);
         },
         readInstruction: function(line) {
             return regex.simpleJump('j', line);
@@ -320,7 +320,7 @@ var operations = {
     beq: {
         operation: function(op) {
             if (reg.getV(op[1]) === reg.getV(op[2])) {
-                instructionParse.jumpLocation = parser.findProcedure(op[3]);
+                instructionParse.jumpLocation = program.findProcedure(op[3]);
                 this.returnValue = 'j';
             }
             else {
@@ -337,7 +337,7 @@ var operations = {
     beqz:{
         operation: function(op) {
             if (reg.getV(op[1]) === 0) {
-                instructionParse.jumpLocation = parser.findProcedure(op[2]);
+                instructionParse.jumpLocation = program.findProcedure(op[2]);
                 this.returnValue = 'j';
             }
             else {
@@ -354,7 +354,7 @@ var operations = {
     bgtz:{
         operation: function(op) {
             if (reg.getV(op[1]) > 0) {
-                instructionParse.jumpLocation = parser.findProcedure(op[2]);
+                instructionParse.jumpLocation = program.findProcedure(op[2]);
                 this.returnValue = 'j';
             }
             else {
@@ -371,7 +371,7 @@ var operations = {
     bgez:{
         operation: function(op) {
             if (reg.getV(op[1]) >= 0) {
-                instructionParse.jumpLocation = parser.findProcedure(op[2]);
+                instructionParse.jumpLocation = program.findProcedure(op[2]);
                 this.returnValue = 'j';
             }
             else {
@@ -388,7 +388,7 @@ var operations = {
     bltz:{
         operation: function(op) {
             if (reg.getV(op[1]) < 0) {
-                instructionParse.jumpLocation = parser.findProcedure(op[2]);
+                instructionParse.jumpLocation = program.findProcedure(op[2]);
                 this.returnValue = 'j';
             }
             else {
@@ -405,7 +405,7 @@ var operations = {
     blez: {
         operation: function(op) {
             if (reg.getV(op[1]) <= 0) {
-                instructionParse.jumpLocation = parser.findProcedure(op[2]);
+                instructionParse.jumpLocation = program.findProcedure(op[2]);
                 this.returnValue = 'j';
             }
             else {
@@ -422,7 +422,7 @@ var operations = {
     bne: {
         operation: function(op) {
             if (reg.getV(op[1]) != reg.getV(op[2])) {
-                instructionParse.jumpLocation = parser.findProcedure(op[3]);
+                instructionParse.jumpLocation = program.findProcedure(op[3]);
                 this.returnValue = 'j';
             }
             else {

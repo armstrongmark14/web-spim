@@ -33,7 +33,17 @@ main:
 
             <div class="col-md-1">
                 <div id="control-panel" class="col-md-12 text-center">
-                    <button class="control-button btn btn-success" onclick="run()">Run  <i class="fa fa-play"></i></button>
+                    <button class="control-button btn btn-success" onclick="runFullProgram()">Run  <i class="fa fa-play"></i></button>
+                    <br><br><br>
+                    <!-- This section allows the user to step through a program 1 line at a time -->
+                    <div id="lines-completed">Line Just Completed: <span id="step-through-lines"></span></div>
+                    <button class="control-button btn btn-primary" onclick="runNextLine()">Step  <i class="fa fa-step-forward"></i></button>
+
+
+                    <br><br><br>
+                    
+                    <!-- Button for resetting the simulator to default status -->
+                    <button class="control-button btn btn-danger" onclick="resetSimulator()">Reset  <i class="fa fa-refresh"></i></button>
                     
                 </div>
             </div>
@@ -240,6 +250,8 @@ var editor = CodeMirror.fromTextArea(codeBox, {
         <script type="text/javascript" src="js/settings.js"></script>
         <!-- This piece simply displays errors so I don't have error code everywhere -->
         <script type="text/javascript" src="js/errors.js"></script>
+        <!-- Javascript for handling the UI updates that happen -->
+        <script type="text/javascript" src="js/ui.js"></script>
         <!-- This object houses the 32 registers along with display functionality and conversion from DEC-HEX-BIN -->
         <script type="text/javascript" src="js/registers.js"></script>
         <!-- This houses all the RegExp for the code parsing -->
@@ -247,11 +259,11 @@ var editor = CodeMirror.fromTextArea(codeBox, {
         <!-- Here is where all the functionality of each operation exists -->
         <script type="text/javascript" src="js/operations.js"></script>
         <!-- This object holds the code and will return it line-by-line along with some other functionality -->
-        <script type="text/javascript" src="js/parser.js"></script>
+        <script type="text/javascript" src="js/program.js"></script>
         <!-- This object pulls from the parser and passes to the operation to run each instruction -->
         <script type="text/javascript" src="js/instructionParse.js"></script>
         <!-- Essentially the main() function and user-interface handlers -->
-        <script type="text/javascript" src="js/code.js"></script>
+        <script type="text/javascript" src="js/main.js"></script>
     </body>
 </html>
 

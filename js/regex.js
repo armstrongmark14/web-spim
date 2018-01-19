@@ -129,7 +129,7 @@ var regex = {
         
         // Checking to see if it's within the 16-bit int range
         if (v > 32767 || v < -32768) {
-            throw new Error('Immediate value out of range. Line: ' + parser.getCurrentLine());
+            throw new Error('Immediate value out of range. Line: ' + program.getCurrentLine());
         }
         return v;
     }

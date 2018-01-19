@@ -94,7 +94,7 @@ var reg = {
         var value = num.toString(2);
         var pad = '0';
         var padding = '';
-
+        // If number is negative, set pad to negative and get 2's comp
         if (num < 0) {
             value = (num >>> 0).toString(2);
             pad = '1';

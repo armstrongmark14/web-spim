@@ -1,7 +1,12 @@
 var instructionParse = {
+    stepThroughStarted: false,
+    jump: false,
+    line: null,
+    result: null,
     reset: function() {
         this.jumpLocation = 0;
         this.infiniteLoopCounter = 0;
+        this.stepThroughStarted = false;
     },
     run: function() {
 
@@ -9,30 +14,22 @@ var instructionParse = {
         // use values from the last run
         this.reset();
         // Reading the code from the textarea into the parser
-        parser.readCode();
-
-        var jump = false;
-        var jumpAndLink = false;
-        var line;
-        var result;
+        program.readCode();
 
         console.clear();
 
-        for (var i = 0; i < parser.lines; i++) {
+        for (var i = 0; i < program.lines; i++) {
 
             // Parsing the current line
-            line = parser.parseLine();
+            line = program.nextLine();
 
             result = instructionParse.read(line);
             
             // Doing this right after the instruction is read so we go around
             // again if we break for the load/branch/jump delay slot :)
-            if (jump && result != 'comment' && result != 'procedure') {
-                if (jumpAndLink) {
-
-                }
+            if (this.jump && result != 'comment' && result != 'procedure') {
                 // Have to update cursor location, change loop variable
-                parser.jumpTo(this.jumpLocation);
+                program.jumpTo(this.jumpLocation);
                 i = this.jumpLocation;
                 this.jumpLocation = null;
                 jump = false;
@@ -48,7 +45,7 @@ var instructionParse = {
 
             // Setting it up to go into the jump functionality next loop around
             if (result === 'j') {
-                jump = true;
+                this.jump = true;
             }
             
             // Reading the line and performing action
@@ -59,14 +56,23 @@ var instructionParse = {
         }
 
         // Since the code has finished running, we update registers and output
-        reg.updateAll();        
-        console.log("******************************");
-        console.log("EXECUTION FINISHED");
+        this.updateRegisterDisplay("Execution Finished. Complete code has been run");
     },
 
     // This will read each line and send the line to the correct function
     // that will execute it
     read: function(line) {
+        if (this.stepThroughStarted) {
+            ui.updateLinesCompleted(program.getCurrentLine(), program.lines - 1);
+            reg.updateAll();
+        }
+        if (program.lines == program.getCurrentLine() + 1) {
+            console.log("ALL LINES RUN");
+            // Have to reset the step through to false since we finished
+            this.stepThroughStarted = false;
+            console.clear();
+            return;
+        }
         if (line === null) {
             // Line is null, so skip the rest
             return;
@@ -99,21 +105,31 @@ var instructionParse = {
 
         // Checking if the operation exists
         if (operations[code] == undefined) {
-            error.invalidOperation(parser.getCurrentLine());
+            error.invalidOperation(program.getCurrentLine());
         }
 
         var instructionArray = operations[code].readInstruction(line);
-        console.log(instructionArray);
 
         if (instructionArray === null) {
-            error.syntaxError(parser.getCurrentLine());
+            error.syntaxError(program.getCurrentLine());
         }
 
         // This will perform the desired operation using the register values
         // and immediates that were obtained from the line
         operations[code].operation(instructionArray);
 
+        // Checking if we're in step-through-mode and if so, update registers
+        if (this.stepThroughStarted) {
+            this.updateRegisterDisplay("Line: " + program.getCurrentLine() + "\nExecuted");
+        }
+
         return operations[code].returnValue;
+    },
+
+    // function that will log to console and update register display
+    updateRegisterDisplay: function(msg) {
+        reg.updateAll();        
+        console.log(msg);
     },
 
     

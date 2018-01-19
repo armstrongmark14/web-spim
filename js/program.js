@@ -1,18 +1,14 @@
-var parser = {
+var program = {
     code: [],
     lines: 0,
     currentLine: 0,
-    // Returns the next line in the file
+    // Getting the line as an array of non-whitespace items
     nextLine: function() {
         if (this.currentLine >= this.lines) {
             return [];
         }
         this.currentLine += 1;
-        return this.code[this.currentLine - 1];
-    },
-    // Getting the line as an array of non-whitespace items
-    parseLine: function() {
-        var line = this.nextLine();
+        var line = this.code[this.currentLine - 1];
         if (regex.isEmptyLine(line)) {
             return "#";    // Making null lines into commented lines ;)
         }
@@ -55,6 +51,13 @@ var parser = {
     // Function for getting the actual line we're working with. -For Errors
     getCurrentLine: function() {
         return this.currentLine - 1;
+    },
+
+    // Resetting this object so the thing can be started again
+    reset: function() {
+        this.code = [];
+        this.lines = 0;
+        this.currentLine = 0;
     }
 };
 
