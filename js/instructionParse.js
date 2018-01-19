@@ -19,40 +19,20 @@ var instructionParse = {
         console.clear();
 
         for (var i = 0; i < program.lines; i++) {
-
             // Parsing the current line
             line = program.nextLine();
-
-            result = instructionParse.read(line);
-            
-            // Doing this right after the instruction is read so we go around
-            // again if we break for the load/branch/jump delay slot :)
-            if (this.jump && result != 'comment' && result != 'procedure') {
-                // Have to update cursor location, change loop variable
-                program.jumpTo(this.jumpLocation);
-                i = this.jumpLocation;
-                this.jumpLocation = null;
-                jump = false;
-
-                // Checking for infinite loop because you know it'll happen :P
-                this.infiniteLoopCounter += 1;
-                if (this.infiniteLoopCounter > settings.jumpLimit) {
-                    var m="You have an infinite loop.\nI stopped it.";
-                    alert(m);
-                    break;
-                }
+            // This reads the line and tests the return value
+            if(instructionParse.read(line)) {
+                // If this returns true we have a jump
+                i = program.getCurrentLine();
             }
 
-            // Setting it up to go into the jump functionality next loop around
-            if (result === 'j') {
-                this.jump = true;
+            if (this.infiniteLoopCounter > settings.jumpLimit) {
+                var m="You have an infinite loop.\nI stopped it.";
+                alert(m);
+                break;    // Breaking the loop if we hit the jump limiter 
             }
             
-            // Reading the line and performing action
-            if (result === null) {
-                console.log("PROGRAM EXIT:\n" + line);
-                break;    // Have to break to exit here, no delay :)
-            }
         }
 
         // Since the code has finished running, we update registers and output
@@ -79,17 +59,9 @@ var instructionParse = {
         }
         
         if (regex.isCommentLine(line)) {
-            // This line is a comment so do nothing
-            // We also need to return 'comment' so that we know to skip this 
-            // line for jumps/branch/load delay slow purposes
             return 'comment';
         }
         else if (regex.isProcedure(line)) {
-            // If it is a procedure declaration
-            // console.log("Procedure: " + regex.getProcedureName(line));
-            if (regex.getProcedureName(line) == 'programExit') {
-                return 'exit';
-            }
             return 'procedure';
         }
 
@@ -123,7 +95,13 @@ var instructionParse = {
             this.updateRegisterDisplay("Line: " + program.getCurrentLine() + "\nExecuted");
         }
 
-        return operations[code].returnValue;
+        var result = false;
+        // Checking for jumps and executing them
+        if (this.jumpCheck(operations[code].returnValue)) {
+            result = true;
+        }
+
+        return result;
     },
 
     // function that will log to console and update register display
@@ -132,7 +110,29 @@ var instructionParse = {
         console.log(msg);
     },
 
-    
+    // Checking for jumps
+    jumpCheck: function(result) {
+        // Doing this right after the instruction is read so we go around
+        // again if we break for the load/branch/jump delay slot :)
+        if (this.jump && result != 'comment' && result != 'procedure') {
+            // Have to update cursor location, change loop variable
+            program.jumpTo(this.jumpLocation);
+            this.jumpLocation = null;
+            this.jump = false;
+
+            // Checking for infinite loop because you know it'll happen
+            this.infiniteLoopCounter += 1;
+        }
+
+        // Setting it up to go into the jump functionality next loop around
+        if (result === 'j') {
+            this.jump = true;
+        }
+
+        // We are not breaking program execution, so return false
+        return false; 
+    },
+
     // These store the line of the code to jump to, and the amount of jumps
     jumpLocation: 0,
     infiniteLoopCheck: 0
