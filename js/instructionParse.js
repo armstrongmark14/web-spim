@@ -115,11 +115,11 @@ var instructionParse = {
         // Doing this right after the instruction is read so we go around
         // again if we break for the load/branch/jump delay slot :)
         if (this.jump && result != 'comment' && result != 'procedure') {
-            // Have to update cursor location, change loop variable
+            // Have to update cursor location to jumped procedure
             program.jumpTo(this.jumpLocation);
+            // Since we just completed the jump, reset the jump variables
             this.jumpLocation = null;
             this.jump = false;
-
             // Checking for infinite loop because you know it'll happen
             this.infiniteLoopCounter += 1;
         }

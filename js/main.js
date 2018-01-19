@@ -6,7 +6,7 @@ function runFullProgram() {
     var end = new Date();
     console.log( "TIME: " + (time.getTime() - end.getTime()) / 1000);
     // Resetting the UI pieces
-    ui.updateLinesCompleted(0, 0);
+    ui.updateLinesCompleted(program.lines - 1, program.lines - 1);
 }
 
 function runNextLine() {

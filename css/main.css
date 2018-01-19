@@ -9,6 +9,7 @@ body {
 }
 
 #control-panel {
+    font-family: Helvetica;
     margin: 15px;
     margin-top: 15px;
     margin-bottom: 15px;
@@ -88,7 +89,13 @@ td[id$="-decimal"] {
     background-color: #CFD8DC;
 }
 
-
+#lines-completed {
+    font-size: 20px;
+}
+#step-through-lines {
+    font-size: 30px;
+    font-weight: bold;
+}
 
 
 
