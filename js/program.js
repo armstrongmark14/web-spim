@@ -20,7 +20,6 @@ var program = {
         this.code = [];
         this.code = editor.getValue().split('\n');
         this.lines = this.code.length;
-        // this.code[this.lines] += '\n';
     },
     
     // Will find the location of a procedure in the code
@@ -51,6 +50,11 @@ var program = {
     // Function for getting the actual line we're working with. -For Errors
     getCurrentLine: function() {
         return this.currentLine - 1;
+    },
+
+    // function to return whether or not the code has been fully read
+    isFinished: function() {
+        return this.getCurrentLine() + 1 >= this.lines;
     },
 
     // Resetting this object so the thing can be started again

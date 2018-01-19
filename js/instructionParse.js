@@ -46,27 +46,28 @@ var instructionParse = {
             ui.updateLinesCompleted(program.getCurrentLine(), program.lines - 1);
             reg.updateAll();
         }
-        if (program.lines == program.getCurrentLine() + 1) {
+
+        // This variable will be false if we shouldn't run the operation
+        var result = null;
+
+        if (line === null || regex.isCommentLine(line)) {
+            result = 'comment';
+        }
+        else if (regex.isProcedure(line)) {
+            result = 'procedure';
+        }
+        else {
+            result = this.performOperation(line); 
+        }
+
+        if (program.isFinished()) {
             console.log("ALL LINES RUN");
             // Have to reset the step through to false since we finished
             this.stepThroughStarted = false;
-            console.clear();
-            return;
-        }
-        if (line === null) {
-            // Line is null, so skip the rest
-            return;
-        }
-        
-        if (regex.isCommentLine(line)) {
-            return 'comment';
-        }
-        else if (regex.isProcedure(line)) {
-            return 'procedure';
+            return false;
         }
 
-        // If it's none of those, we'll check if it's an operation and do it
-        return this.performOperation(line);
+        return result;
     },
 
     // Performs the selected operation on the line
@@ -89,11 +90,6 @@ var instructionParse = {
         // This will perform the desired operation using the register values
         // and immediates that were obtained from the line
         operations[code].operation(instructionArray);
-
-        // Checking if we're in step-through-mode and if so, update registers
-        if (this.stepThroughStarted) {
-            this.updateRegisterDisplay("Line: " + program.getCurrentLine() + "\nExecuted");
-        }
 
         var result = false;
         // Checking for jumps and executing them
